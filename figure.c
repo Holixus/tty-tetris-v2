@@ -52,7 +52,9 @@ void figure_draw(figure_t *self, field_t *field, int show)
 	int id = self->id;
 	if (id < 0)
 		return;
-	unsigned char fill = show ? (unsigned char)(id + 1) : '\0';
+	unsigned char fill = (unsigned char)(id + 1);
+	if (!show)
+		fill = 0;
 	unsigned int fig = get_figure(id, self->angle);
 	int x = self->x, y = self->y;
 	for (int i = 0; i < FIGURE_LENGTH; ++i, fig >>= 4)

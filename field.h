@@ -24,7 +24,7 @@ void field_row_move(field_t *self, int dst, int src);
 int field_row_wiegh(field_t *self, int y);
 int field_row_is_empty(field_t *self, int y);
 int field_row_is_full(field_t *self, int y);
-int field_check_coords(field_t *self, int x, int y);
+unsigned int field_check_coords(field_t *self, int x, int y);
 
 void field_set_cell(field_t *self, int x, int y, int value);
 unsigned int field_get_cell(field_t *self, int x, int y);

@@ -73,15 +73,15 @@ static inline utf_char_t utf8_to_glyph(char const **utf8)
 }
 
 /* -------------------------------------------------------------------------- */
-static int detect_char_seq(char const *start)
+static int detect_char_seq(char const *text)
 {
-	if (!*start)
+	if (!*text)
 		return 0;
 
-	char const *raw = start;
+	char const *raw = text;
 	utf_char_t glyph = utf8_to_glyph(&raw);
 	if (glyph != '\033')
-		return (int)(raw - start);
+		return (int)(raw - text);
 
 	char ch = *raw++;
 	switch (ch) {
@@ -91,12 +91,12 @@ static int detect_char_seq(char const *start)
 			++raw;
 		ch = *raw++;
 		if (64 <= ch && ch <= 126)
-			return (int)(raw - start);
+			return (int)(raw - text);
 		return 0;
 
 	default:
 		if (32 <= ch && ch <= 127)
-			return (int)(raw + 1 - start);
+			return (int)(raw + 1 - text);
 	}
 
 	return 0; /* not closed sequence */

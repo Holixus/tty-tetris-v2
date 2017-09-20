@@ -146,7 +146,7 @@ static int io_con_write(char const *data, size_t size)
 	}
 
 	unsigned int po = io_con_stream->put_ofs, go = io_con_stream->get_ofs, co_size = io_con_stream->size;
-	ssize_t avail = po >= go ? go - po + (unsigned int)size : go - po;
+	ssize_t avail = po >= go ? (ssize_t)(go - po + size) : (ssize_t)(go - po);
 	if (avail < size) {
 		unsigned int new_size = io_con_stream->size;
 		do {

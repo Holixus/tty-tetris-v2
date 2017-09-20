@@ -35,14 +35,14 @@ static const key_command_t commands[] = {
 	{ "d",         KEY_RIGHT },
 	{ "p",         KEY_PAUSE },
 	{ "q",         KEY_QUIT },
-	{}
+	{ "", 0 }
 };
 
 /* -------------------------------------------------------------------------- */
 static char *get_path_filename(char *full_path)
 {
-	char *start = strrchr(full_path, '/');
-	return start ? start + 1: full_path;
+	char *slash = strrchr(full_path, '/');
+	return slash ? slash + 1: full_path;
 }
 
 

@@ -153,7 +153,7 @@ int field_row_is_full(field_t *self, int y)
 }
 
 /* ------------------------------------------------------------------------ */
-int field_check_coords(field_t *self, int x, int y)
+unsigned int field_check_coords(field_t *self, int x, int y)
 {
 	return 0 <= x && x < self->width &&
 	       0 <= y && y < self->height;
@@ -175,7 +175,9 @@ void field_set_cell(field_t *self, int x, int y, int value)
 /* ------------------------------------------------------------------------ */
 unsigned int field_get_cell(field_t *self, int x, int y)
 {
-	return field_check_coords(self, x, y) ? self->data[cell_offset(self, x, y)] : ((cell_value_t)~0);
+	if (field_check_coords(self, x, y))
+		return self->data[cell_offset(self, x, y)];
+	return (cell_value_t)~0;
 }
 
 
