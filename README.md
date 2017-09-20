@@ -1,6 +1,7 @@
 
 Very simple Tetris-game version with optimized output for slow terminals.
 
+![screen short](screen-shorts/tty-teris2.gif)
 
 ### How to Compile
 
