@@ -1,7 +1,7 @@
 
 Very simple Tetris-game version with optimized output for slow terminals.
 
-![screen short](https://github.com/Holixus/tty-tetris-v2/raw/master/screen-shorts/tty-tetris2.gif)
+![](https://github.com/Holixus/tty-tetris-v2/raw/master/screen-shorts/tty-tetris2.gif) ![](https://raw.githubusercontent.com/Holixus/tty-tetris-v2/master/screen-shorts/tty-tetris3.jpg)
 
 ### How to Compile
 
