@@ -21,13 +21,13 @@ ENDIF()
 
 FILE(GLOB SOURCES *.c nano/*.c)
 
-ADD_EXECUTABLE(ntet ${SOURCES})
+ADD_EXECUTABLE(tty-tetris ${SOURCES})
 
 IF(HOST_DEBUG)
 	ADD_DEFINITIONS(-O0 -g3)
 ELSE()
 	ADD_DEFINITIONS(-Os -Werror -fvisibility=hidden -ffast-math -fmerge-all-constants -ffunction-sections -fdata-sections -s)
-	SET_TARGET_PROPERTIES(ntet PROPERTIES LINK_FLAGS -Wl,--gc-sections)
+	SET_TARGET_PROPERTIES(tty-tetris PROPERTIES LINK_FLAGS -Wl,--gc-sections)
 ENDIF()
 
 
