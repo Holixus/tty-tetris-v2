@@ -31,7 +31,7 @@ static void tetris_pause(tetris_t *self)
 {
 	io_timer_set_timeout(self->timer, (self->paused = !self->paused) ? -1 : 1000);
 	if (self->paused) {
-		con_cls();
+		//con_cls();
 	} else {
 		tetris_refresh(self);
 	}
@@ -69,9 +69,9 @@ static void tetris_key_handler(void *p, char const *seq, int code)
 /* -------------------------------------------------------------------------- */
 void tetris_init(tetris_t *self, int left, int top)
 {
-	score_init(&self->score, left + 5, top + 3);
-	board_init(&self->game, left + 30, top + 2, 10, 20, " .");
-	board_init(&self->next, left + 10, top + 10, 4, 4, "  ");
+	score_init(&self->score, left + 5, top + 4);
+	board_init(&self->game, left + 27, top + 2, 10, 20, " .");
+	board_init(&self->next, left + 10, top + 11, 4, 4, "  ");
 
 	self->stage = TS_INIT;
 	self->period = 0;
@@ -109,7 +109,7 @@ static void tetris_static_draw(tetris_t *self)
   [q] - quit\
 ";
 	con_cls();
-	con_box(55, 2, cyan, text);
+	con_box(55, 3, cyan, text);
 	field_walls_put(&self->game.field);
 	//con_flush();
 }
