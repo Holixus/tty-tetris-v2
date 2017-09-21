@@ -1,8 +1,9 @@
+
 /* -------------------------------------------------------------------------- */
-long io_now() {
+long long io_now() {
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
-	return tv.tv_sec*1000 + tv.tv_usec/1000;
+	return (long long)tv.tv_sec*1000 + tv.tv_usec/1000;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -86,16 +87,17 @@ void io_timer_stop(io_timer_t *self)
 static inline io_timer_t *io_get_nearest_timer()
 {
 	auto io_timer_t *active = NULL;
-	for (io_timer_t *t = io_active_timers; t; t = t->next)
+	for (io_timer_t *t = io_active_timers; t; t = t->next) {
 		if (t->next_time > 0) {
 			active = t;
 			for (t = t->next; t; t = t->next) {
-				auto long nt = t->next_time;
+				auto long long nt = t->next_time;
 				if (nt > 0 && nt < active->next_time)
 					active = t;
 			}
 			break;
 		}
+	}
 	return active;
 }
 
@@ -103,7 +105,7 @@ static inline io_timer_t *io_get_nearest_timer()
 /* -------------------------------------------------------------------------- */
 static inline int io_get_timeout()
 {
-	long now = io_now();
+	long long now = io_now();
 	auto io_timer_t *t;
 	do {
 		t = io_get_nearest_timer();

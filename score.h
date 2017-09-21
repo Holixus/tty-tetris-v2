@@ -2,7 +2,7 @@ typedef
 struct score {
 	int left, top;
 	int lines, figures, score, level;
-	long start_time;
+	long long start_time;
 	int visible;
 } score_t;
 

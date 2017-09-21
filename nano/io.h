@@ -4,14 +4,14 @@ typedef void (timer_handler_t)(void *custom);
 
 struct io_timer {
 	io_timer_t *next;
-	long next_time;
+	long long next_time;
 	int period;
 	timer_handler_t *handler;
 	void *custom;
 };
 
 
-long io_now();
+long long io_now();
 
 io_timer_t *io_timer_alloc(timer_handler_t *handler, void *custom);
 
