@@ -76,14 +76,20 @@ static void io_con_event_handler(io_stream_t *stream, int events)
 /* -------------------------------------------------------------------------- */
 void io_con_flush()
 {
-	io_con_event_handler(&io_con_stream->stream, 0);
+	//io_con_event_handler(&io_con_stream->stream, 0);
+}
+
+/* -------------------------------------------------------------------------- */
+static void stdout_nonblock_set(int yes)
+{
+	int flags = fcntl(STDOUT_FILENO, F_GETFL);
+	fcntl(STDOUT_FILENO, F_SETFL, yes ? flags & ~O_NONBLOCK : flags | O_NONBLOCK);
 }
 
 /* -------------------------------------------------------------------------- */
 static void io_con_free_handler(io_stream_t *stream)
 {
-	int flags = fcntl(STDOUT_FILENO, F_GETFL);
-	fcntl(STDOUT_FILENO, F_SETFL, flags & ~O_NONBLOCK);
+	stdout_nonblock_set(0);
 
 	io_con_event_handler(stream, POLLOUT); // flush out buffer
 
@@ -114,8 +120,7 @@ void io_con_init()
 	co->buffer = (char *)malloc(co->size = IO_CON_BUFFER_SIZE);
 	co->get_ofs = co->put_ofs = 0;
 
-	int flags = fcntl(STDOUT_FILENO, F_GETFL);
-	fcntl(STDOUT_FILENO, F_SETFL, flags | O_NONBLOCK);
+	stdout_nonblock_set(1);
 }
 
 
@@ -145,30 +150,41 @@ static int io_con_write(char const *data, size_t size)
 		size -= (unsigned)ret;
 	}
 
-	unsigned int po = io_con_stream->put_ofs, go = io_con_stream->get_ofs, co_size = io_con_stream->size;
-	ssize_t avail = po >= go ? (ssize_t)(go - po + size) : (ssize_t)(go - po);
+	unsigned int po = io_con_stream->put_ofs,
+	             go = io_con_stream->get_ofs,
+	             co_size = io_con_stream->size;
+
+	ssize_t avail = (ssize_t)( po >= go ? size - po + go  : go - po );
+	char *buff = io_con_stream->buffer;
 	if (avail < size) {
 		unsigned int new_size = io_con_stream->size;
 		do {
 			avail += IO_CON_BUFFER_SIZE;
 			new_size += IO_CON_BUFFER_SIZE;
 		} while (avail < size);
-		char *heap;
+
 		if (go <= po)
-			heap = realloc(io_con_stream->buffer, new_size);
+			buff = realloc(buff, new_size);
 		else {
-			heap = malloc(new_size);
-			memcpy(heap, io_con_stream->buffer + go, (size_t)(co_size - go));
-			memcpy(heap + co_size - go, io_con_stream->buffer, (size_t)po);
-			io_con_stream->get_ofs = 0;
-			io_con_stream->put_ofs = co_size - (go - po);
+			buff = malloc(new_size);
+			memcpy(buff, io_con_stream->buffer + go, (size_t)(co_size - go));
+			memcpy(buff + co_size - go, io_con_stream->buffer, (size_t)po);
+			io_con_stream->put_ofs = po = co_size - (go - po);
+			io_con_stream->get_ofs = go = 0;
 			free(io_con_stream->buffer);
 		}
-		io_con_stream->buffer = heap;
-		io_con_stream->size = new_size;
+		io_con_stream->buffer = buff;
+		io_con_stream->size = co_size = new_size;
 	}
-	memcpy(io_con_stream->buffer + io_con_stream->put_ofs, data, size);
-	io_con_stream->put_ofs += (unsigned int)size;
+	ssize_t tail_size = co_size - po;
+	if (go <= po && tail_size < size) {
+		memcpy(buff + po, data, (unsigned)tail_size);
+		memcpy(buff, data + tail_size, po = (unsigned)(size - (unsigned)tail_size));
+	} else {
+		memcpy(buff + po, data, size);
+		po += (unsigned)size;
+	}
+	io_con_stream->put_ofs = po;
 	io_con_stream->stream.events = POLLOUT;
 	return (int)size;
 }
