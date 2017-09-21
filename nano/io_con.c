@@ -176,7 +176,7 @@ static int io_con_write(char const *data, size_t size)
 		io_con_stream->buffer = buff;
 		io_con_stream->size = co_size = new_size;
 	}
-	ssize_t tail_size = co_size - po;
+	ssize_t tail_size = (ssize_t)(co_size - po);
 	if (go <= po && tail_size < size) {
 		memcpy(buff + po, data, (unsigned)tail_size);
 		memcpy(buff, data + tail_size, po = (unsigned)(size - (unsigned)tail_size));
