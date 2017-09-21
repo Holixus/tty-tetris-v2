@@ -3,9 +3,9 @@
 #define FIGURE_LENGTH 4
 
 /*
-	0 1 2 3
-	4 5 6 7
-	8 9 A B
+	0 1 2 3      0 1         1
+	4 5 6 7        5 6     4 5
+	8 9 A B                8
 	C D E F
 */
 

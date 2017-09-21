@@ -90,32 +90,6 @@ void tetris_free(tetris_t *self)
 }
 
 /* -------------------------------------------------------------------------- */
-static void tetris_static_draw(tetris_t *self)
-{
-	static char const text[] = "\
-  cursor keys\n\
-       or\n\
-\n\
-     rotate\n\
-       |\n\
-      [w]\n\
-<-[a] [s] [d]->\n\
-\n\
-    [space]\n\
-       |\n\
-       V\n\
-\n\
-  [p] - pause\n\
-  [q] - quit\
-";
-	con_cls();
-	con_box(55, 3, cyan, text);
-	field_walls_put(&self->game.field);
-	//con_flush();
-}
-
-
-/* -------------------------------------------------------------------------- */
 static void tetris_tick(tetris_t *self);
 static inline void tetris_timer_handler(void *self)
 {
@@ -140,7 +114,27 @@ static void tetris_gameover(tetris_t *self)
 /* -------------------------------------------------------------------------- */
 static void tetris_refresh(tetris_t *self)
 {
-	tetris_static_draw(self);
+	static char const text[] = "\
+  cursor keys\n\
+       or\n\
+\n\
+     rotate\n\
+       |\n\
+      [w]\n\
+<-[a] [s] [d]->\n\
+\n\
+    [space]\n\
+       |\n\
+       V\n\
+\n\
+  [p] - pause\n\
+  [q] - quit\
+";
+
+	con_cls();
+	con_box(55, 3, cyan, text);
+	field_walls_put(&self->game.field);
+
 	score_refresh(&self->score);
 	board_refresh(&self->next);
 	board_refresh(&self->game);
@@ -156,7 +150,7 @@ static void tetris_tick(tetris_t *self)
 	switch (self->stage) {
 	case TS_INIT:
 		++self->stage;
-		tetris_static_draw(self);
+		tetris_refresh(self);
 		board_figure_new(&self->next);
 		score_start(&self->score);
 		next_timeout = 1;
@@ -217,6 +211,6 @@ static void tetris_tick(tetris_t *self)
 		break;
 	}
 	io_timer_set_period(self->timer, next_timeout);
-	con_flush();
+	//con_flush();
 }
 
