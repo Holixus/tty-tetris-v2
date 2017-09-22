@@ -47,11 +47,8 @@ void board_figure_new(board_t *self)
 	board_figure_draw(self, 1);
 }
 
-
-/* -------------------------------------------------------------------------- */
-int board_figure_move(board_t *self, int dx, int dy, int dang)
+static int board_figure_submove(board_t *self, int dx, int dy, int dang)
 {
-	figure_draw(&self->figure, &self->field, 0);
 	self->figure.x += dx;
 	self->figure.y += dy;
 	self->figure.angle += dang;
@@ -59,26 +56,35 @@ int board_figure_move(board_t *self, int dx, int dy, int dang)
 		if (!dx && !dy && dang && self->figure.y < 0) { // patch for "line" fig. rotation at top position
 			self->figure.y = 0;
 			if (!figure_test(&self->figure, &self->field))
-				goto _draw;
+				return 0;
 		} else
 			self->figure.y -= dy;
 		self->figure.x -= dx;
 		self->figure.angle -= dang;
-		figure_draw(&self->figure, &self->field, 1);
 		return -1; // no place to move
 	}
-_draw:
-	figure_draw(&self->figure, &self->field, 1);
-	field_put(&self->field);
 	return 0;
+}
+
+/* -------------------------------------------------------------------------- */
+int board_figure_move(board_t *self, int dx, int dy, int dang)
+{
+	figure_draw(&self->figure, &self->field, 0);
+	int res = board_figure_submove(self, dx, dy, dang);
+	figure_draw(&self->figure, &self->field, 1);
+	if (res >= 0) // the figure has moved
+		field_put(&self->field);
+	return res;
 }
 
 
 /* -------------------------------------------------------------------------- */
 int board_figure_drop(board_t *self)
 {
+	figure_draw(&self->figure, &self->field, 0);
 	int c = 0;
 	for (; !board_figure_move(self, 0, 1, 0); ++c);
+	figure_draw(&self->figure, &self->field, 1);
 	return c;
 }
 
