@@ -83,7 +83,7 @@ int board_figure_drop(board_t *self)
 {
 	figure_draw(&self->figure, &self->field, 0);
 	int c = 0;
-	for (; !board_figure_move(self, 0, 1, 0); ++c);
+	for (; !board_figure_submove(self, 0, 1, 0); ++c);
 	figure_draw(&self->figure, &self->field, 1);
 	return c;
 }
