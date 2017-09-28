@@ -57,7 +57,7 @@ static void tetris_key_handler(void *p, char const *seq, int code)
 	case KEY_UP:     board_figure_move(&self->game,  0, 0,  1); break;
 	case KEY_DOWN:   board_figure_move(&self->game,  0, 0, -1); break;
 	case KEY_DROP:
-		board_figure_drop(&self->game);
+		self->score.score += board_figure_drop(&self->game);
 		io_timer_set_period(self->timer, 1);
 		break;
 	case KEY_PAUSE:  tetris_pause(self);
