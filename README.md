@@ -7,7 +7,7 @@ Very simple Tetris-game version with optimized output for slow terminals.
 
 ```sh
 
-# git clone git@github.com:Holixus/tty-tetris-v2.git
+# git clone https://github.com/Holixus/tty-tetris-v2.git
 # cmake .
 # make
 ```
