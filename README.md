@@ -1,5 +1,5 @@
 
-Very simple Tetris-game version with optimized output for slow terminals.
+Simple Tetris-game version optimized for slow terminals without dependencies. Nice for embedded devices.
 
 ![](https://github.com/Holixus/tty-tetris-v2/raw/master/screen-shorts/tty-tetris2.gif) ![](https://raw.githubusercontent.com/Holixus/tty-tetris-v2/master/screen-shorts/tty-tetris3.jpg)
 
@@ -26,7 +26,7 @@ Very simple Tetris-game version with optimized output for slow terminals.
 
 ### How to run
 
-With support ANSI/VT100 colors:
+With ANSI/VT100 colors support:
 
 ```sh
 # tty-tetris
