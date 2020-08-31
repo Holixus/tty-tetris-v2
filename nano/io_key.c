@@ -148,6 +148,9 @@ static void keyin_event(io_stream_t *stream, int events)
 		keyin_seq_handler(seq);
 	}
 
+	if (data_start == buffer)
+		return;
+
 	auto long len = data_end - data_start;
 	if (len > 0)
 		memmove(buffer, data_start, (size_t)len);
