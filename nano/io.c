@@ -54,5 +54,7 @@ int main(int argc, char *argv[])
 		if (!ret || (ret < 0 && errno != EINTR))
 			return ret;
 	} while (1);
+
+	return 0;
 }
 
