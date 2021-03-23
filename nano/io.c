@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
-#include <sys/poll.h>
+#include <poll.h>
 #include <sys/time.h>
 #include <signal.h>
 #include <errno.h>
