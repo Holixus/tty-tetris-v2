@@ -71,18 +71,25 @@ void start(int argc, char *argv[])
 	static struct option const long_options[] = {
 	/*     name, has_arg, *flag, chr */
 		{ "nocolor", 0, 0, 'c' },
+		{ "bsp",     0, 0, 'b' },
 		{ "help",    0, 0, 'h' },
 		{ 0, 0, 0, 0 }
 	};
 
+	int to_options = 0; // like black screen pause
+
 	for (;;) {
 		int option_index;
-		switch (getopt_long(argc, argv, "?hc", long_options, &option_index)) {
+		switch (getopt_long(argc, argv, "?hcb", long_options, &option_index)) {
 		case -1:
 			goto _end_of_opts;
 
 		case 'c':
 			con_colors_enable(0);
+			break;
+
+		case 'b':
+			to_options |= TO_BLACK_SCREEN_PAUSE;
 			break;
 
 		case 'h':
@@ -91,6 +98,7 @@ void start(int argc, char *argv[])
 "Usage: %s <options>\n\n\
 options:\n\
   -c, --nocolor\t: disable ANSI colors;\n\
+  -b, --bsp\t: enable black screen pause;\n\
   -h\t\t: print this help and exit.\n\n", get_path_filename(argv[0]));
 			return;
 		}
@@ -104,6 +112,6 @@ _end_of_opts:
 
 	io_atexit(free_all);
 
-	tetris_init(&ntet, 0, 0);
+	tetris_init(&ntet, 0, 0, to_options);
 	tetris_start(&ntet);
 }

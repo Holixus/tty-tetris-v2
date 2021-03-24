@@ -31,7 +31,8 @@ static void tetris_pause(tetris_t *self)
 {
 	io_timer_set_timeout(self->timer, (self->paused = !self->paused) ? -1 : 1000);
 	if (self->paused) {
-		//con_cls();
+		if (self->options & TO_BLACK_SCREEN_PAUSE)
+			con_cls();
 	} else {
 		tetris_refresh(self);
 	}
@@ -67,7 +68,7 @@ static void tetris_key_handler(void *p, char const *seq, int code)
 
 
 /* -------------------------------------------------------------------------- */
-void tetris_init(tetris_t *self, int left, int top)
+void tetris_init(tetris_t *self, int left, int top, int options)
 {
 	score_init(&self->score, left + 5, top + 4);
 	board_init(&self->game, left + 27, top + 2, 10, 20, " .");
@@ -78,6 +79,7 @@ void tetris_init(tetris_t *self, int left, int top)
 	self->timer = NULL;
 	io_key_on(tetris_key_handler, self);
 	self->paused = 0;
+	self->options = options;
 }
 
 /* -------------------------------------------------------------------------- */
